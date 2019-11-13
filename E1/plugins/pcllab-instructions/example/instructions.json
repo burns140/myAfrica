@@ -1,0 +1,26 @@
+{
+  "General": [
+    {
+      "title": "General Instructions",
+      "text": "<p>Throughout the experiment, you will see a progress bar at the top of the screen to show you which phase of the experiment you are in.<br><br>In addition, you will see progress timers at the bottom of the screens that will show you how much time you have left in each phase before you can advance to the next phase.</p><p>At the end of the experiment, there will be a few final questions for you to answer. You will then receive your code to enter into MTurk.</p><p>Please do not write anything down, do not click the back button on your browser, and do not open other tabs or browsers during the experiment.</p><p>Thank you for your participation! Click 'Continue' when you are ready to start the experiment.</p>"
+    },
+    {
+      "title": "General Instructions Html",
+      "text_url": "/plugins/pcllab-instructions/example/instructions.html",
+      "insert_url": "/plugins/pcllab-instructions/example/additional_instructions.html"
+    },
+    {
+      "title": "Second General Instructions",
+      "text": "<br><div id=\"additional_content\"></div>Throughout the experiment, you will see a progress bar at the top of the screen to show you which phase of the experiment you are in.<br><br>In addition, you will see progress timers at the bottom of the screens that will show you how much time you have left in each phase before you can advance to the next phase.<br><br>At the end of the experiment, there will be a few final questions for you to answer. You will then receive your code to enter into MTurk.<br><br>Please do not write anything down, do not click the back button on your browser, and do not open other tabs or browsers during the experiment.<br><br>Thank you for your participation! Click 'Continue' when you are ready to start the experiment.",
+      "insert_url": "/plugins/pcllab-instructions/example/additional_instructions.html"
+    }
+  ],
+  "Study": {
+    "title": "Study Instructions",
+    "text": "<br>In the first part of this experiment, you will see a text on the screen, and your job will be to study the text so that you can remember it later. (Note that you might have to scroll down the screen to see the whole text.) You will have to study the text for a minimum of 2 minutes. When 2 minutes is over, you may advance by pressing the 'Continue' button when you are ready.<br><br>Click the button to begin the study phase. <br>In the next part of the experiment, you will have a chance to study the text a second time. You will see the text on the screen, and your job will be to study the text so that you can remember it later.<br><br>You will have to study the text for a minimum of 2 minutes. When 2 minutes is over, you may advance by pressing the 'Continue' button when you are ready.<br><br>Click 'Continue' when you are ready to begin."
+  },
+  "Recall": {
+    "title": "Recall Instructions",
+    "text": "<br>In the next part of the experiment, you will take a recall test over the text. You will see a box on the screen, and your job is to recall as much of the information as you can from the text. you will also see a list of clues on the screen, and you should use those clues to guide you as you try to recall the material.<br><br>You will have to spend at least 4 minutes trying to recall the material. You may spend more than 4 minutes recalling if you want to. We realize that this is a difficult task, but try to recall as much as you can during the entire 4 minute recall period. When 4 minutes is over, you may advance by pressing the 'Continue' button when you are ready.<br><br>Click 'Continue' when you are ready to begin.<br>In the next part of the experiment, you will complete another recall test. The test will be exactly the same as the one you completed earlier: You will see a box on the screen, and your job is to recall as much of the information as you can from the text. You will also see a list of clues on the screen, and you should use those clues to guide you as you try to recall the material.<br><br>You will have to spend at least 4 minutes trying to recall the material. You may spend more than 4 minutes recalling if you want to. We realize that this is a difficult task, but try to recall as much as you can during the entire 4 minute recall period. When 4 minutes is over, you may advance by pressing the 'Continue' button when you are ready.<br><br>Click 'Continue' when you are ready to begin."
+  }
+}

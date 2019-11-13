@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+        integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+    <!-- MDBootstrap -->
+    <link href="https://fonts.googleapis.com/css?family=Tajawal" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/mdb.css">
+
+    <link rel="stylesheet" href="../../../css/jspsych.css">
+    <link rel="stylesheet" href="../../../css/pcllab-plugins.css">
+
+    <title>pcllab-africa-map-task</title>
+</head>
+
+<body>
+    <div id="experiment_container" class="container-fluid"></div>
+
+    <!-- SCRIPTS -->
+    <!-- jQuery first, then Bootstrap JS. -->
+    <script src="../../../js/jquery.min.js"></script>
+    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.3.2/js/mdb.min.js"></script>
+
+    <!-- Then jsPsych -->
+    <script src="../../../jspsych.js"></script>
+
+    <!-- Plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.js"></script>
+    <script src="../plugin.js"></script>
+    <script type="text/javascript" src="../js/africa-paths.js"></script>
+    <script type="text/javascript" src="../src/mettlerFormula.js"></script>
+    <script type="text/javascript" src="../src/memorizePresentation.js"></script>
+    <script type="text/javascript" src="../src/shuffle.js"></script>
+    <script type="text/javascript" src="../src/fixedTask.js"></script>
+    
+</body>
+
+<script>
+
+    var condition = 'mettler';          // Which condition the user is in
+    var mettlerItems;                   // The array of mettler items
+    var memorizeItems;                  // The array of memorize items
+    var fixedItems;                     // The array of regular fixed items
+    var curItem;                        // The item currently being presented
+    var prevItem = null;                // The last item that was presented
+    var prevTimeElapsed = 0;            // The time that had elapsed in the experiment when the previous answer was given
+    var thisTimeElapsed = 0;            // The time that had elapsed in the experiment when this answer was selected
+    var correctness = -1;               // Whether the answer was correct
+    var firstTrial;                     // The first trial to be placed into timeline
+    var timeline;                       // The timeline used to initialize for jspsych
+
+    if (condition == 'mettler') {
+        mettlerItems = createMettlerItems(africaPaths);         // Create the array with mettler items
+        mettlerItems = fisherYatesShuffle(mettlerItems);        // Randomly shuffle that array
+        curItem = mettlerItems.shift();                         // The current item will be the first item in the array (highest priority)
+        firstTrial = {
+            type: TASK,                                         // pcllab-africa-map-task, defined in mettlerFormula.js
+            target: curItem.countryName,                    
+            feedback: true,
+            on_finish: function() {
+                console.log(jsPsych.data.getLastTrialData());
+                jsPsych.pauseExperiment();
+                console.log(mettlerItems);
+                var buttonel = document.getElementById('selected');
+                if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
+                    correctness = 0;
+                } else {
+                    correctness = 1;
+                }
+                thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;             // Get the time elapsed for this item
+                var info = getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctness, mettlerItems);          // Get info needed to get next trial. Object containing trial, next item, and array
+                var trial = info.trial;
+                curItem = info.curItem;
+                mettlerItems = info.mettlerItemArr;
+                prevTimeElapsed = thisTimeElapsed;          // Set prev time elapsed to this time in order to calc response time for next item
+                jsPsych.addNodeToEndOfTimeline({
+                    timeline: [trial]
+                }, jsPsych.resumeExperiment)
+            }
+        }
+        timeline = [firstTrial];
+    } else if (condition == 'fixed') {
+        fixedItems = createFixedItems(africaPaths);
+        fixedItems = fisherYatesShuffle(fixedItems);
+        curItem = fixedItems.shift();
+        firstTrial = {
+            type: TASK,
+            target: curItem.countryName,
+            feedback: true,
+            on_finish: function() {
+                jsPsych.pauseExperiment();
+                var buttonel = document.getElementById('selected');
+                if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
+                    correctness = 0;
+                } else {
+                    correctness = 1;
+                }
+                var info = getNextFixedItem(curItem, correctness, fixedItems);
+                var trial = info.trial;
+                curItem = info.curItem;
+                fixedItems = info.fixedItemArr;
+                
+                jsPsych.addNodeToEndOfTimeline({
+                    timeline: [trial]
+                }, jsPsych.resumeExperiment)
+            }
+        }
+        timeline = [firstTrial];
+    } else if (condition == 'memorize') {
+        memorizeItems = createMemorizeItems(africaPaths);
+        memorizeItems = fisherYatesShuffle(memorizeItems);
+        curItem = memorizeItems.shift();
+        firstTrial = {
+            type: TASK,
+            target: curItem.countryName,
+            feedback: true,
+            on_finish: function() {
+                jsPsych.pauseExperiment();
+                var buttonel = document.getElementById('selected');
+                if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
+                    correctness = 0
+                } else {
+                    correctness = 1
+                }
+                var info = getNextMemorizeItem(curItem, correctness, memorizeItems);
+                var trial = info.trial;
+                curItem = info.curItem;
+                memorizeItems = info.memorizeItemArr;
+
+                jsPsych.addNodeToEndOfTimeline({
+                    timeline: [trial]
+                }, jsPsych.resumeExperiment)
+            }
+        }
+        timeline = [firstTrial];
+    }
+    
+    jsPsych.init({
+        display_element: $("div#experiment_container"),
+        timeline: timeline,
+        on_finish: function () {
+            jsPsych.data.displayData();
+        }
+    })
+
+</script>
+
+</html>

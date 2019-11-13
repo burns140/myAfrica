@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+        crossorigin="anonymous">
+
+    <!-- MDBootstrap -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.3.2/css/mdb.min.css">
+
+    <link rel="stylesheet" href="../../../css/jspsych.css">
+    <link rel="stylesheet" href="../../../css/pcllab-plugins.css">
+
+    <title>pcllab-study-items-example</title>
+</head>
+
+<body>
+    <div id="experiment_container" class="container-fluid"></div>
+
+    <!-- jQuery first, then Bootstrap JS. -->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
+    <!-- MDB JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.3.2/js/mdb.min.js"></script>
+
+    <!-- Then jsPsych -->
+    <script src="../../../jspsych.js"></script>
+
+    <!-- Plugins -->
+    <script src="../plugin.js"></script>
+
+
+</body>
+
+<script>
+    var trial = {
+        type: 'pcllab-ratings',
+        trialUrl: 'example.json',
+        label: 'label1',
+        vertical: true,
+        label_width: '100px'
+    };
+
+    var trial2 = {
+        type: 'pcllab-ratings',
+        trialUrl: 'example.json',
+        label: 'label2'
+    };
+
+    jsPsych.init({
+        display_element: $("div#experiment_container"),
+        timeline: [trial, trial2],
+        on_finish: function () {
+            jsPsych.data.displayData();
+        }
+    })
+
+</script>
+
+</html>

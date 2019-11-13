@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="../../../css/jspsych.css">
+
+    <!-- jQuery first, then Bootstrap JS. -->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+
+    <!-- Then jsPsych -->
+    <script src="../../../jspsych.js"></script>
+
+    <!-- Plugins -->
+    <script src="../../pcllab-no-mobile/plugin.js"></script>
+
+    <title>pcllab-no-mobile-example</title>
+</head>
+<body>
+<div id="experiment_container" class="container-fluid"></div>
+</body>
+
+<script>
+    var trial = {
+        type: 'pcllab-no-mobile'
+    };
+
+    jsPsych.init({
+        display_element: $("div#experiment_container"),
+        timeline: [trial],
+        on_finish: function () {
+            $("#experiment_container").html("finished");
+        }
+    })
+</script>
+</html>
