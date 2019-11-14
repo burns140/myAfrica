@@ -1,0 +1,19 @@
+{
+  "name": "africa-map-project",
+  "version": "1.0.0",
+  "description": "Burns senior project with adaptive learning",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PCLLAB/Africa-Map-Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PCLLAB/Africa-Map-Project/issues"
+  },
+  "homepage": "https://github.com/PCLLAB/Africa-Map-Project#readme"
+}

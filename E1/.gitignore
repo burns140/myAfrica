@@ -1,4 +1,5 @@
 .idea
-plugins/
 docs/markdown_docs
 docs/site
+
+plugins/pcllab-africa-map-task/node_modules
