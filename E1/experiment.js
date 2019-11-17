@@ -198,6 +198,37 @@ class Experiment {
         this.timeline.push(firstTrial);
     }
 
+    run() {
+        jsPsych.init({
+            display_element: $("div#experiment_container"),
+            timeline: this.timeline,
+            on_finish:  () => {
+                jsPsych.data.addProperties({
+                    worker_id: this.workerId,
+                    condition: this.condition,
+                    timestamp: new Date().toUTCString()
+                })
+                //jsPsych.data.displayData();
+
+                let myData = jsPsych.data.dataAsJSON() // Data for the experiment
+				// $.ajax('https://jarvis.psych.purdue.edu/api/v1/experiments/data/5bf8373244ad5b3318ca6049', {
+				// 	data: myData,
+				// 	contentType: 'application/json',
+				// 	type: 'POST'
+				// })
+
+				$('#jspsych-content').css('text-align', 'center');
+				$('#jspsych-content').html(`
+				    <h2>Thank you for your participation!</h2><br><br>
+                    <h1>Survey code: ${constants.TOKEN}</h1><br><br>
+				    <a href="debriefing.html" target="_blank">Click here to read about the purpose of this experiment</a>
+				    
+				`)
+				jsPsych.data.localSave('Delayed-Self-Scoring-E3-' + this.workerId + '.csv', 'csv')
+            }
+        })
+    }    
+
 
 
 
