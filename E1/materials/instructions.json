@@ -1,12 +1,12 @@
 {
     "start": {
         "title": "Instructions",
-        "text": "<p>Please read the following instructions carefully. This experiment will last about 30 minutes, and you'll receive $2.00 for participating. Please do not write anything down, do not click the back button on your browser, and do not open other tabs or browsers during the experiment.</p> <p>In this experiment, you will studying and recalling the location of countries on a map of Africa.</p> <p>A country on the map of Africa will be highlighted and you will be asked to select a button that has the name of the corresponding country. After each trial, you will be told the correct answer. </p> <p>You will do this task until all location have been recalled correctly <b>a set number of times</b>. There will be 25 countries that you will be scored on. </p> <br> <p style=\"text-align: center\">Thank you for participating! Click Continue when you are ready to begin.</p>"
+        "text": "<p>Please read the following instructions carefully. This experiment will last about 30 minutes, and you'll receive $2.00 for participating. Please do not write anything down, do not click the back button on your browser, and do not open other tabs or browsers during the experiment.</p> <p>In this experiment, you will studying and recalling the location of countries on a map of Africa.</p> <p>A country on the map of Africa will be highlighted and you will be asked to select a button that has the name of the corresponding country. After each trial, you will be told the correct answer. </p> <p>You will do this task until all locations have been recalled correctly <b>a set number of times</b>. There will be 25 countries that you will be scored on. </p> <br> <p style=\"text-align: center\">Thank you for participating! Click Continue when you are ready to begin.</p>"
     },
 
     "map-task": {
         "title": "Africa Map Task",
-        "text": "<p>In this part of the experiment, you will be presented with a map of Africa on the left side of the screen and a list of countries on the right side of the screen. For each trial, a country will be highlighted on the map and you will select the corresponding button on the right side of the screen.</p> <br> <p style=\"text-align: center\">Click Begin when you are ready to begin.</p>" 
+        "text": "<p>In this part of the experiment, you will be presented with a map of Africa on the left side of the screen and a list of countries on the right side of the screen. For each trial, a country will be highlighted on the map and you will select the corresponding button on the right side of the screen.</p> <br> <p style=\"text-align: center\">Click 'Continue' when you are ready to begin.</p>" 
     },
 
     "posttest": {

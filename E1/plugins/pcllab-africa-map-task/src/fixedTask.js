@@ -57,7 +57,7 @@ function getNextFixedItem(curItem, correctness, fixedItemArr) {
                     correctness = 1;
                 }
                 thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
-                var info = getNextTimelineItem(curItem, thisTimeElapsed, prevTimeElapsed, correctness, mettlerItems);
+                var info = getNextFixedItem(curItem, correctness, fixedItems);
                 if (info == undefined) {
                     jsPsych.data.displayData();
                     return;

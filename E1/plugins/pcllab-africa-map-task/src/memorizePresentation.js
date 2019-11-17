@@ -210,7 +210,7 @@ function getNextMemorizeItem(curItem, correctness, memorizeItemArr) {
     curItem.forgettingRate = calcForgettingRate(curItem);
     curItem.p_recall = calcRecallProb(curItem);
     curItem.reviewingItensity = calcReviewingIntensity(curItem);
-    curItem.priority = sampler(forgettingRate, Q, T);
+    curItem.priority = sampler(curItem.forgettingRate, Q, T);
 
     for (var el of memorizeItemArr) {
         el.sinceLastSeen++;
