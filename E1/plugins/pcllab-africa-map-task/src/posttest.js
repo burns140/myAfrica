@@ -1,22 +1,19 @@
-
 /**
  * @constructor
  * @param {string: The country name} name
- * Represents each fixed item that will be displayed 
+ * Represents each item that will be displayed 
  */
-function FixedItem(name) {
-    this.countryName = name;
+function postItem(name) {
+    this.countryName = name;                    /* The name of the country */
     this.accuracy = 1;
-    this.timesShown = 0;
-    this.timesCorrect = 0;
 }
 
 /**
  * Populate the array that will have the country items
  * @param {json: Contains all country names and coordinates on map} allCountries
- * @returns {array: the array with all mettlerItems}  
+ * @returns {array: the array with all postItems}  
  */
-function createFixedItems(allCountries) {
+function createPostItems(allCountries) {
     var countryItems = [];
 
     for (var key in allCountries) {
@@ -29,22 +26,22 @@ function createFixedItems(allCountries) {
             }
             formatName += nameArr[i];
         }
-        countryItems.push(new FixedItem(formatName));
+        countryItems.push(new postItem(formatName));
     }
     return countryItems;
 }
 
-function getNextFixedItem(curItem, correctness, fixedItemArr) {
-    curItem.accuracy = correctness;
-    curItem.timesShown++;
-
-    if (curItem.timesCorrect < 4 || filler.includes(curItem)) {
-        fixedItemArr.splice(5, 0, curItem);
+function getNextPosttestItem(curItem, correctness, regularItemArr) {
+    if (correctness == 0) {
+        curItem.accuracy = 0;
+    } else {
+        curItem.accuracy = 1;
     }
 
-    curItem = fixedItemArr.shift();
+    results.push(curItem);
+    curItem = regularItemArr.shift();
 
-    if (curItem != undefined && fixedItemArr.length > 4) {
+    if (curItem != undefined) {
         var nextTrial = {
             type: TASK,
             target: curItem.countryName,
@@ -57,17 +54,14 @@ function getNextFixedItem(curItem, correctness, fixedItemArr) {
                 } else {
                     correctness = 1;
                 }
-                thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
-                var info = getNextFixedItem(curItem, correctness, fixedItems);
+                var info = getNextPosttestItem(curItem, correctness, regularItems);
                 if (info == undefined) {
-                    //jsPsych.data.displayData();
-                    givePosttest();
+                    console.log('post test done');
                     return;
                 }
                 var trial = info.trial;
                 curItem = info.curItem;
-                mettlerItems = info.mettlerItemArr;
-                prevTimeElapsed = thisTimeElapsed;
+                regularItems = info.regularItemArr;
                 jsPsych.addNodeToEndOfTimeline({
                     timeline: [trial]
                 }, jsPsych.resumeExperiment)
@@ -76,10 +70,11 @@ function getNextFixedItem(curItem, correctness, fixedItemArr) {
     } else {
         return undefined;
     }
-
+    
     return {
         trial: nextTrial,
         curItem: curItem,
-        fixedItemArr: fixedItemArr
+        regularItemArr: regularItemArr
     }
+
 }

@@ -19,6 +19,7 @@ function MettlerItem(name) {
     this.accuracy = 1;                          /* Whether the answer was correct or incorrect */
     this.responseTime = 6;                     /* How long it took the user to respond */
     this.timesShown = 0;                        /* How many times a word has been seen by the user */
+    this.timesCorrect = 0;
 }
 
 /**
@@ -56,7 +57,7 @@ function getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctne
     }
 
     /* Push most recent answer onto array and sort in descending order by priority */
-    if (curItem.timesShown < 4) {
+    if (curItem.timesCorrect < 4) {
         mettlerItemArr.push(curItem);
     }
     mettlerItemArr.sort((i1, i2) => i2.priority - i1.priority);
@@ -86,7 +87,8 @@ function getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctne
                 thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
                 var info = getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctness, mettlerItems);
                 if (info == undefined) {
-                    jsPsych.data.displayData();
+                    //jsPsych.data.displayData();
+                    givePosttest();
                     return;
                 }
                 var trial = info.trial;

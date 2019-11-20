@@ -212,12 +212,19 @@ function getNextMemorizeItem(curItem, correctness, memorizeItemArr) {
     curItem.reviewingItensity = calcReviewingIntensity(curItem);
     curItem.priority = sampler(curItem.forgettingRate, Q, T);
 
+    if (correctness == 0) {
+        curItem.timesCorrect++;
+    }
+
     for (var el of memorizeItemArr) {
         el.sinceLastSeen++;
         el.p_recall = calcRecallProb(el);
     }
 
-    memorizeItemArr.push(curItem);
+    if (curItem.timesCorrect < 4) {
+        memorizeItemArr.push(curItem);
+    }
+    
     memorizeItemArr.sort((i1, i2) => i2.p_recall - i1.p_recall);
     if (memorizeItemArr[0].countryName == prevName) {
         var temp = memorizeItemArr[0];
@@ -242,7 +249,8 @@ function getNextMemorizeItem(curItem, correctness, memorizeItemArr) {
                 }
                 var info = getNextMemorizeItem(curItem, correctness, memorizeItems);
                 if (info == undefined) {
-                    jsPsych.data.displayData();
+                    //jsPsych.data.displayData();
+                    givePosttest();
                     return;
                 }
                 var trial = info.trial;
@@ -273,6 +281,7 @@ function MemorizeItem(key) {
     this.accuracy = -1;
     this.reviewingItensity = -1;
     this.priority = 0;
+    this.timesCorrect = 0;
 }
 
 function createMemorizeItems(allCountries) {
