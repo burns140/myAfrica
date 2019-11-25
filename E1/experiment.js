@@ -2,7 +2,8 @@ constants = {
     INSTRUCTIONS: "materials/instructions.json",
     CONDITION_FIXED: "fixed",
     CONDITION_METTLER: "mettler",
-    CONDITION_MEMORIZE: "memorize"
+    CONDITION_MEMORIZE: "memorize",
+    CONDITION_POST: "testpost"
 }
 
 var mettlerItems = null;
@@ -115,6 +116,11 @@ var filler = {
 	burkina_faso: "m 1593.5676,3765.1079 c -204.5272,-17.8716 -395.1545,89.3564 -552.025,230.3412 -135.02761,-67.5138 -79.42791,123.114 -178.71311,160.842 -99.2849,5.957 -83.3995,125.099 -79.4279,170.77 l -31.7714,123.114 c 89.3567,194.598 236.2984,-1.986 341.54071,127.085 65.5282,-77.443 -15.8856,-133.042 43.6853,-212.471 l 383.2404,0 c 55.5997,15.886 121.1278,-21.842 148.9277,27.8 l 1.9854,1.986 c 57.5853,-109.214 168.7844,-63.543 226.3697,-168.785 l -7.9426,-17.871 c -21.8429,-51.628 -67.5138,-83.4 -105.2424,-79.428 -57.5853,-113.1852 -220.4127,-224.3845 -190.6272,-363.3834 z m 309.7694,446.7822 c 0,0 0,0 0,0 0,0 0,0 0,0 z m 1.9855,-3.971 c 0,-1.985 0,-1.985 0,-1.985 0,0 0,0 0,1.985 z m 1.9854,-7.943 c 1.9854,0 1.9854,0 1.9854,-1.985 0,1.985 0,1.985 -1.9854,1.985 z m 3.9715,-5.957 c 0,0 0,0 0,-1.985 0,1.985 0,1.985 0,1.985 z m -244.2412,208.499 c -1.9855,1.985 -1.9855,3.971 -3.9716,5.957 1.9855,-1.986 1.9855,-3.972 3.9716,-5.957 z m -3.9716,5.957 c 0,1.985 -1.9854,3.971 -1.9854,5.957 0,-1.986 1.9854,-3.971 1.9854,-5.957 z m -1.9854,7.943 c -3.9713,5.957 -5.957,13.9 -7.9426,21.842 1.9854,-7.942 3.9713,-15.885 7.9426,-21.842 z"
 }
 
+var test = {
+	madagascar: "m 8759.9637,8062.1651 c -77.4425,75.457 -131.0567,160.842 -146.9422,238.284 -125.0991,121.128 -276.0123,188.642 -438.8398,226.37 0,0 -81.4138,69.5 -81.4138,115.171 0,45.671 15.8857,103.257 -5.9572,127.085 -23.8285,21.843 -69.4994,73.471 -49.6424,85.385 69.4994,192.613 -17.8714,373.312 -137.0135,520.254 -19.8568,47.657 -37.7281,93.328 -53.6138,142.97 59.571,117.157 -11.9144,355.441 174.7416,426.926 109.2136,77.4419 216.4414,-61.557 321.6837,-89.356 41.6999,-55.6 63.5427,-129.071 83.3997,-178.714 23.8279,-71.485 77.4419,-144.956 103.2565,-220.413 11.9137,-31.771 45.6707,-67.513 57.5844,-99.284 39.7144,-105.243 59.5714,-210.485 103.2574,-317.713 31.7711,-81.413 45.6707,-162.827 81.4134,-242.255 9.9291,-23.829 39.7141,-47.657 49.6422,-69.5 -23.8276,-93.328 101.2717,-172.756 57.5857,-274.027 31.771,-51.628 81.4132,73.471 111.1996,-29.785 -77.4428,-160.842 0,-295.87 -95.3141,-456.711 -19.8572,-47.657 -83.3993,-51.629 -83.3993,-51.629 -47.6563,33.757 -19.8569,101.271 -51.6281,146.942 z",
+	togo: "m 1647.1816,5103.4701 -45.6711,-53.614 -27.7999,-516.282 c -15.8856,-57.585 -101.2708,-123.113 -53.614,-168.785 55.5997,15.886 121.1278,-21.842 148.9277,27.8 l 1.9854,1.986 c -7.9431,11.914 -13.9,25.814 -17.8713,43.685 73.4707,111.199 79.4279,222.399 105.2421,353.455 l -21.8429,285.941 0,13.9 c -27.7998,3.971 -57.5853,11.914 -87.3708,21.843 l -1.9854,-9.929 z m 182.6844,-15.885 0,0 c -13.8998,1.985 -27.7998,1.985 -41.6996,1.985 13.8998,0 27.7998,0 41.6996,-1.985 z m -47.6568,1.985 c -3.9713,0 -7.9426,0 -11.9141,0 3.9715,0 7.9428,0 11.9141,0 z m -11.9141,0 c 0,0 -1.9855,0 -1.9855,0 0,0 0,0 0,0 -1.9854,0 -1.9854,0 -1.9854,0 0,0 0,0 0,0 -1.9854,0 -1.9854,0 -1.9854,0 0,0 0,0 -1.9855,0 0,0 0,0 0,0 0,0 0,0 0,0 -1.9854,0 -1.9854,0 -1.9854,0 0,0 0,0 0,0 0,0 0,0 -1.9854,0 0,0 0,0 0,0 0,0 0,0 0,0 -1.9855,0 -1.9855,0 -1.9855,0"
+}
+
 class Experiment {
     constructor() {
         this.workerid = null;
@@ -134,8 +140,9 @@ class Experiment {
 			var conditions = [constants.CONDITION_FIXED, constants.CONDITION_METTLER, constants.CONDITION_MEMORIZE];
 			this.condition = conditions[Math.floor(condRand * conditions.length)];
         }
-        this.condition = constants.CONDITION_FIXED;
-        
+        //this.condition = constants.CONDITION_FIXED;
+        //this.condition = constants.CONDITION_POST;
+
         console.log('Worker ID', this.workerId);
         console.log(this.condition);
 
@@ -204,6 +211,7 @@ class Experiment {
 
         regularItems = createPostItems(africaPaths);
         regularItems = fisherYatesShuffle(regularItems);
+        console.log('created reg');
         switch (this.condition) {
             case constants.CONDITION_FIXED:
                 this.buildTimelineFixed();
@@ -214,9 +222,10 @@ class Experiment {
             case constants.CONDITION_MEMORIZE:
                 this.buildTimelineMemorize();
                 break;
+            case constants.CONDITION_POST:
+                this.givePosttest();
+                break;
         }
-
-
     }
 
     buildTimelineMettler() {
@@ -252,7 +261,9 @@ class Experiment {
     }
 
     buildTimelineFixed() {
-        fixedItems = createFixedItems(africaPaths);
+        console.log('building timeline');
+        //fixedItems = createFixedItems(africaPaths);
+        fixedItems = createFixedItems(test);
         var filleritems = createFixedItems(filler);
         fixedItems = fisherYatesShuffle(fixedItems);
         fixedItems.push(...filleritems);
@@ -271,7 +282,7 @@ class Experiment {
                 }
                 var info = getNextFixedItem(curItem, correctness, fixedItems);
                 var trial = info.trial;
-                curItem = info.curItem;
+                curItem = info.nextItem;
                 fixedItems = info.fixedItemArr;
                 
                 jsPsych.addNodeToEndOfTimeline({
@@ -280,6 +291,7 @@ class Experiment {
             }
         }
         this.timeline.push(firstTrial);
+        console.log(this.timeline);
     }
 
     buildTimelineMemorize() {
@@ -337,32 +349,6 @@ class Experiment {
             }
         })
     }    
-
-    givePosttest() {
-        curItem = regularItems.shift();
-        firstTrial = {
-            type: TASK,
-            target: curItem.countryName,
-            feedback: true,
-            on_finish: function() {
-                jsPsych.pauseExperiment();
-                var buttonel = document.getElementById('selected');
-                if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
-                    correctness = 0
-                } else {
-                    correctness = 1
-                }
-                var info = getNextPosttestItem(curItem, correctness);
-                var trial = info.trial;
-                curItem = info.curItem;
-                regularItems = info.regularItemArr;
-
-                jsPsych.addNodeToEndOfTimeline({
-                    timeline: [trial]
-                }, jsPsych.resumeExperiment)
-            }
-        }
-    }
 
     
 }

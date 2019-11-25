@@ -88,16 +88,17 @@ function getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctne
                 var info = getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctness, mettlerItems);
                 if (info == undefined) {
                     //jsPsych.data.displayData();
-                    givePosttest();
-                    return;
+                    postInstr();
+                } else {
+                    var trial = info.trial;
+                    curItem = info.curItem;
+                    mettlerItems = info.mettlerItemArr;
+                    prevTimeElapsed = thisTimeElapsed;
+                    jsPsych.addNodeToEndOfTimeline({
+                        timeline: [trial]
+                    }, jsPsych.resumeExperiment)
                 }
-                var trial = info.trial;
-                curItem = info.curItem;
-                mettlerItems = info.mettlerItemArr;
-                prevTimeElapsed = thisTimeElapsed;
-                jsPsych.addNodeToEndOfTimeline({
-                    timeline: [trial]
-                }, jsPsych.resumeExperiment)
+                
             }
         }
     } else {

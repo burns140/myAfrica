@@ -250,16 +250,16 @@ function getNextMemorizeItem(curItem, correctness, memorizeItemArr) {
                 var info = getNextMemorizeItem(curItem, correctness, memorizeItems);
                 if (info == undefined) {
                     //jsPsych.data.displayData();
-                    givePosttest();
-                    return;
+                    postInstr();
+                } else {
+                   var trial = info.trial;
+                    curItem = info.curItem;
+                    memorizeItems = info.memorizeItemArr;
+                    jsPsych.addNodeToEndOfTimeline({
+                        timeline: [trial]
+                    }, jsPsych.resumeExperiment) 
                 }
-                var trial = info.trial;
-                curItem = info.curItem;
-                memorizeItems = info.memorizeItemArr;
-
-                jsPsych.addNodeToEndOfTimeline({
-                    timeline: [trial]
-                }, jsPsych.resumeExperiment)
+                
             }
         }
     } else {

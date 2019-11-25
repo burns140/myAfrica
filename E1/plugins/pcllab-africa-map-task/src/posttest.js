@@ -78,3 +78,54 @@ function getNextPosttestItem(curItem, correctness, regularItemArr) {
     }
 
 }
+
+function postInstr() {
+    var instructions_trial = {
+        type: 'pcllab-core',
+        stimuli: [{"title": "Instructions",
+        "text": "<p>You will now take a test on the countries that you studied earlier. You will no longer receive feedback after each answer. <br> <p style=\"text-align: center\">Click Begin when you are ready to begin the posttest.</p>"
+        }],
+        response_count: 0,
+        show_button: true,
+        button_text: 'continue',
+        data: {
+            period: 'instructions'
+        },
+        on_finish: function() {
+            givePosttest();
+        }
+    }
+    jsPsych.addNodeToEndOfTimeline({
+        timeline: [instructions_trial]
+    }, jsPsych.resumeExperiment)
+}
+
+function givePosttest() {
+    curItem = regularItems.shift();
+    firstTrial = {
+        type: TASK,
+        target: curItem.countryName,
+        feedback: true,
+        on_finish: function() {
+            jsPsych.pauseExperiment();
+            var buttonel = document.getElementById('selected');
+            if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
+                correctness = 0
+            } else {
+                correctness = 1
+            }
+            var info = getNextPosttestItem(curItem, correctness, regularItems);
+            var trial = info.trial;
+            curItem = info.curItem;
+            regularItems = info.regularItemArr;
+
+            jsPsych.addNodeToEndOfTimeline({
+                timeline: [trial]
+            }, jsPsych.resumeExperiment)
+        }
+    }
+    jsPsych.addNodeToEndOfTimeline({
+        timeline: [firstTrial]
+    }, jsPsych.resumeExperiment)
+    //this.timeline.push(firstTrial);
+}

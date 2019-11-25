@@ -35,12 +35,16 @@ function createFixedItems(allCountries) {
 }
 
 function getNextFixedItem(curItem, correctness, fixedItemArr) {
+    console.log('get new item');
     curItem.accuracy = correctness;
     curItem.timesShown++;
 
-    if (curItem.timesCorrect < 4 || filler.includes(curItem)) {
+    if (curItem.timesShown < 1) {
         fixedItemArr.splice(5, 0, curItem);
     }
+    /*if (curItem.timesCorrect < 4 || filler.includes(curItem)) {
+        fixedItemArr.splice(5, 0, curItem);
+    }*/
 
     curItem = fixedItemArr.shift();
 
@@ -61,25 +65,28 @@ function getNextFixedItem(curItem, correctness, fixedItemArr) {
                 var info = getNextFixedItem(curItem, correctness, fixedItems);
                 if (info == undefined) {
                     //jsPsych.data.displayData();
-                    givePosttest();
-                    return;
+                    console.log('undefined');
+                    postInstr();
+                } else {
+                    var trial = info.trial;
+                    curItem = info.nextItem;
+                    fixedItems = info.fixedItemArr;
+                    prevTimeElapsed = thisTimeElapsed;
+                    jsPsych.addNodeToEndOfTimeline({
+                        timeline: [trial]
+                    }, jsPsych.resumeExperiment)
                 }
-                var trial = info.trial;
-                curItem = info.curItem;
-                mettlerItems = info.mettlerItemArr;
-                prevTimeElapsed = thisTimeElapsed;
-                jsPsych.addNodeToEndOfTimeline({
-                    timeline: [trial]
-                }, jsPsych.resumeExperiment)
+                
             }
         }
     } else {
         return undefined;
     }
 
+    console.log('return item');
     return {
         trial: nextTrial,
-        curItem: curItem,
+        nextItem: curItem,
         fixedItemArr: fixedItemArr
     }
 }
