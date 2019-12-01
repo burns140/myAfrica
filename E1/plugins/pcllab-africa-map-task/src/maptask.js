@@ -53,6 +53,8 @@ class MapTask {
         return function () {
             const target = self.target.toLowerCase().split('_').join(' ')
             const response = $(this).text().toLowerCase().split('_').join(' ')
+            //console.log(response);
+            //console.log(target);
 
             $('.response-button').attr('disabled', true)
             $('.response-button').css('border', '1px solid #9E9E9E')

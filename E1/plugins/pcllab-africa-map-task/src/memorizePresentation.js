@@ -71,14 +71,8 @@ function prng(len) {
         len = 16;
     }
 
-    var entropy = [];
-    for (var i = 0; i < 16; i++) {
-        entropy.push(0);
-    }
-
-    var crypto = new Crypto();
-    entropy = crypto.getRandomValues();
-    //var entropy = crypto.randomBytes(len);
+    var entropy = new Uint32Array(16);
+    window.crypto.getRandomValues(entropy);
     var result = 0;
 
     for (var i = 0; i < len; i++) {
@@ -199,19 +193,23 @@ function sampler(n_t, q, T) {
         }
         t = t + t_;
         var proposed_int = intensity(t, n_t, q);    // Calculate the forgetting intensity
-        if (rint(1, 0, 1)[0] < (proposed_int / max_int)) {       //Get a value sampled from a uniform distribution
+        if (rint(1, 0, 1, true)[0] < (proposed_int / max_int)) {       //Get a value sampled from a uniform distribution
             return t;
         }
     }
 }
 
 function getNextMemorizeItem(curItem, correctness, memorizeItemArr) {
+    totalItemsShown++;
     curItem.accuracy = correctness;
     curItem.forgettingRate = calcForgettingRate(curItem);
     curItem.p_recall = calcRecallProb(curItem);
-    curItem.reviewingItensity = calcReviewingIntensity(curItem);
-    curItem.priority = sampler(curItem.forgettingRate, Q, T);
+    //curItem.reviewingItensity = calcReviewingIntensity(curItem);
+    //curItem.priority = sampler(curItem.forgettingRate, Q, T);
+    var prevName = curItem.countryName;
 
+
+    curItem.timesShown++;
     if (correctness == 0) {
         curItem.timesCorrect++;
     }
@@ -221,7 +219,7 @@ function getNextMemorizeItem(curItem, correctness, memorizeItemArr) {
         el.p_recall = calcRecallProb(el);
     }
 
-    if (curItem.timesCorrect < 4) {
+    if (curItem.timesShown < 4) {
         memorizeItemArr.push(curItem);
     }
     
@@ -241,6 +239,7 @@ function getNextMemorizeItem(curItem, correctness, memorizeItemArr) {
             feedback: true,
             on_finish: function() {
                 jsPsych.pauseExperiment();
+                totalItemsShown++;
                 var buttonel = document.getElementById('selected');
                 if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
                     correctness = 0;
@@ -282,13 +281,27 @@ function MemorizeItem(key) {
     this.reviewingItensity = -1;
     this.priority = 0;
     this.timesCorrect = 0;
+    this.timesShown = 0;
 }
 
 function createMemorizeItems(allCountries) {
     var memorizeItemArray = [];
     for (var key in allCountries) {
-        memorizeItemArray.push(new MemorizeItem(key));
+        var nameArr = key.split('_');
+        var formatName = "";
+        for (var i = 0; i < nameArr.length; i++) {
+            nameArr[i] = nameArr[i].charAt(0).toUpperCase() + nameArr[i].slice(1);
+            if (i != 0) {
+                formatName += ' ';
+            }
+            formatName += nameArr[i];
+        }
+        memorizeItemArray.push(new MemorizeItem(formatName));
     }
     return memorizeItemArray;
+}
+
+function addBreakMemorize() {
+
 }
 

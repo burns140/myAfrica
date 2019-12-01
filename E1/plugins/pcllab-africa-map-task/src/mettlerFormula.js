@@ -43,6 +43,7 @@ function MettlerPriority(item) {
  * @returns {json: next trial, next item to present, and newly organized array}
  */
 function getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctness, mettlerItemArr) {
+    totalItemsShown++;
     curItem.numSinceLastTrials = 1;
     curItem.responseTime = (thisTimeElapsed - prevTimeElapsed) / 1000.0;
     curItem.accuracy = correctness;
@@ -57,7 +58,7 @@ function getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctne
     }
 
     /* Push most recent answer onto array and sort in descending order by priority */
-    if (curItem.timesCorrect < 4) {
+    if (curItem.timesShown < 4) {
         mettlerItemArr.push(curItem);
     }
     mettlerItemArr.sort((i1, i2) => i2.priority - i1.priority);
@@ -77,6 +78,13 @@ function getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctne
             on_finish: function() {
                 jsPsych.pauseExperiment();
                 //console.log(mettlerItemArr);
+                totalItemsShown++;
+                thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
+                if (totalItemsShown % 24 == 0) {
+                    prevTimeElapsed = thisTimeElapsed;
+                    breakInstr();
+                    return 0;
+                }
                 var buttonel = document.getElementById('selected');
                 if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
                     correctness = 0;
@@ -89,6 +97,8 @@ function getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctne
                 if (info == undefined) {
                     //jsPsych.data.displayData();
                     postInstr();
+                } else if (info == 0) {
+                    //return {};
                 } else {
                     var trial = info.trial;
                     curItem = info.curItem;
@@ -124,7 +134,6 @@ function createMettlerItems(allCountries) {
     for (var key in allCountries) {
         var nameArr = key.split('_');
         var formatName = "";
-    
         for (var i = 0; i < nameArr.length; i++) {
             nameArr[i] = nameArr[i].charAt(0).toUpperCase() + nameArr[i].slice(1);
             if (i != 0) {

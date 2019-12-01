@@ -17,6 +17,8 @@ var correctness = -1;
 var firstTrial = null;
 var regularItems = null;
 var results = [];
+var totalItemsShown = 0;
+var condition;
 
 var fullAfricaPaths = {
 	// lake_victoria:"m 6686.8914,6114.1921 c 45.6711,41.7 -69.4995,53.614 -41.6999,103.257 35.7429,105.242 -224.384,144.956 -67.5138,200.556 -7.9426,45.671 -59.5709,51.628 -97.2992,21.842 -59.571,1.986 -204.5273,95.314 -198.5701,-53.614 55.5996,-101.27 -27.7999,-186.656 67.5138,-299.84 37.7283,-27.8 138.9991,29.785 184.6703,-53.614 49.6424,3.971 91.342,133.041 152.8989,81.413 z",
@@ -138,7 +140,8 @@ class Experiment {
         const condRand = Math.random();
 		if (!this.condition) {
 			var conditions = [constants.CONDITION_FIXED, constants.CONDITION_METTLER, constants.CONDITION_MEMORIZE];
-			this.condition = conditions[Math.floor(condRand * conditions.length)];
+            this.condition = conditions[Math.floor(condRand * conditions.length)];
+            condition = this.condition;
         }
         //this.condition = constants.CONDITION_FIXED;
         //this.condition = constants.CONDITION_POST;
@@ -212,6 +215,7 @@ class Experiment {
         regularItems = createPostItems(africaPaths);
         regularItems = fisherYatesShuffle(regularItems);
         console.log('created reg');
+        totalItemsShown++;
         switch (this.condition) {
             case constants.CONDITION_FIXED:
                 this.buildTimelineFixed();
@@ -262,8 +266,8 @@ class Experiment {
 
     buildTimelineFixed() {
         console.log('building timeline');
-        //fixedItems = createFixedItems(africaPaths);
-        fixedItems = createFixedItems(test);
+        fixedItems = createFixedItems(africaPaths);
+        //fixedItems = createFixedItems(test);
         var filleritems = createFixedItems(filler);
         fixedItems = fisherYatesShuffle(fixedItems);
         fixedItems.push(...filleritems);

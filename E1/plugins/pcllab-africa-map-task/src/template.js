@@ -1,4 +1,5 @@
 const africaPaths = require('../js/africa-paths')
+const africaButtons = require('../js/africa-buttons')
 
 module.exports.buildTemplate = (self) => {
     self.$title = $(`

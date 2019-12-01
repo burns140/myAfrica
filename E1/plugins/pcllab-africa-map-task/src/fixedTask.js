@@ -35,16 +35,16 @@ function createFixedItems(allCountries) {
 }
 
 function getNextFixedItem(curItem, correctness, fixedItemArr) {
-    console.log('get new item');
+    console.log(totalItemsShown);
+    //console.log('get new item');
     curItem.accuracy = correctness;
     curItem.timesShown++;
 
-    if (curItem.timesShown < 1) {
+    if (curItem.timesShown < 4 || filler.hasOwnProperty(curItem.countryName.toLowerCase().replace(/ /g, '_'))) {
         fixedItemArr.splice(5, 0, curItem);
     }
-    /*if (curItem.timesCorrect < 4 || filler.includes(curItem)) {
-        fixedItemArr.splice(5, 0, curItem);
-    }*/
+
+    console.log(fixedItemArr);
 
     curItem = fixedItemArr.shift();
 
@@ -55,18 +55,28 @@ function getNextFixedItem(curItem, correctness, fixedItemArr) {
             feedback: true,
             on_finish: function() {
                 jsPsych.pauseExperiment();
+                totalItemsShown++;
+                thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
+                if (totalItemsShown % 24 == 0) {
+                    prevTimeElapsed = thisTimeElapsed;
+                    console.log('calling break');
+                    breakInstr();
+                    return 0;
+                }
                 var buttonel = document.getElementById('selected');
                 if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
                     correctness = 0;
                 } else {
                     correctness = 1;
                 }
-                thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
                 var info = getNextFixedItem(curItem, correctness, fixedItems);
                 if (info == undefined) {
                     //jsPsych.data.displayData();
-                    console.log('undefined');
+                    //console.log('undefined');
                     postInstr();
+                } else if (info == 0) {
+                    console.log('was 0');
+                    //return {};
                 } else {
                     var trial = info.trial;
                     curItem = info.nextItem;
@@ -76,6 +86,7 @@ function getNextFixedItem(curItem, correctness, fixedItemArr) {
                         timeline: [trial]
                     }, jsPsych.resumeExperiment)
                 }
+                console.log(this.timeline);
                 
             }
         }
@@ -83,7 +94,7 @@ function getNextFixedItem(curItem, correctness, fixedItemArr) {
         return undefined;
     }
 
-    console.log('return item');
+    //console.log('return item');
     return {
         trial: nextTrial,
         nextItem: curItem,

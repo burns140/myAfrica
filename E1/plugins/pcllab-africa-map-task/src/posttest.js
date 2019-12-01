@@ -87,7 +87,7 @@ function postInstr() {
         }],
         response_count: 0,
         show_button: true,
-        button_text: 'continue',
+        button_text: 'begin',
         data: {
             period: 'instructions'
         },
@@ -128,4 +128,146 @@ function givePosttest() {
         timeline: [firstTrial]
     }, jsPsych.resumeExperiment)
     //this.timeline.push(firstTrial);
+}
+
+function breakInstr() {
+    var instructions_trial = {
+        type: 'pcllab-core',
+        stimuli: [{"title": "Instructions",
+        "text": "<p>You have just studied a group of 24 items. <br> <p style=\"text-align: center\">Click Continue when you are ready to continue the learning.</p>"
+        }],
+        response_count: 0,
+        show_button: true,
+        button_text: 'continue',
+        data: {
+            period: 'instructions'
+        },
+        on_finish: function() {
+            var nextTrial;
+            console.log(condition);
+            if (condition == constants.CONDITION_FIXED) {
+                console.log('in fixed');
+                nextTrial = {
+                    type: TASK,
+                    target: curItem.countryName,
+                    feedback: true,
+                    on_finish: function() {
+                        jsPsych.pauseExperiment();
+                        totalItemsShown++;
+                        var buttonel = document.getElementById('selected');
+                        if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
+                            correctness = 0;
+                        } else {
+                            correctness = 1;
+                        }
+                        thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
+                        if (totalItemsShown % 24 == 0) {
+                            breakInstr();
+                            return 0;
+                        }
+                        var info = getNextFixedItem(curItem, correctness, fixedItems);
+                        if (info == undefined) {
+                            //jsPsych.data.displayData();
+                            console.log('undefined');
+                            postInstr();
+                        } else if (info == 0) {
+                            //return {};
+                        } else {
+                            var trial = info.trial;
+                            curItem = info.nextItem;
+                            fixedItems = info.fixedItemArr;
+                            prevTimeElapsed = thisTimeElapsed;
+                            jsPsych.addNodeToEndOfTimeline({
+                                timeline: [trial]
+                            }, jsPsych.resumeExperiment)
+                        }
+                        
+                    }
+                }
+            } else if (condition == "mettler") {
+                nextTrial = {
+                    type: TASK,
+                    target: curItem.countryName,
+                    feedback: true,
+                    on_finish: function() {
+                        jsPsych.pauseExperiment();
+                        //console.log(mettlerItemArr);
+                        totalItemsShown++;
+                        thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
+                        if (totalItemsShown % 24 == 0) {
+                            prevTimeElapsed = thisTimeElapsed;
+                            breakInstr();
+                            return 0;
+                        }
+                        var buttonel = document.getElementById('selected');
+                        if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
+                            correctness = 0;
+                        } else {
+                            correctness = 1;
+                        }
+                        var info = getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctness, mettlerItems);
+                        if (info == undefined) {
+                            //jsPsych.data.displayData();
+                            postInstr();
+                        } else if (info == 0) {
+                            //return {};
+                        } else {
+                            var trial = info.trial;
+                            curItem = info.curItem;
+                            mettlerItems = info.mettlerItemArr;
+                            prevTimeElapsed = thisTimeElapsed;
+                            jsPsych.addNodeToEndOfTimeline({
+                                timeline: [trial]
+                            }, jsPsych.resumeExperiment)
+                        }
+    
+                    }
+                }
+            } else if (condition == "memorize") {
+                nextTrial = {
+                    type: TASK,
+                    target: curItem.countryName,
+                    feedback: true,
+                    on_finish: function() {
+                        jsPsych.pauseExperiment();
+                        totalItemsShown++;
+                        if (totalItemsShown % 24 == 0) {
+                            breakInstr();
+                            return 0;
+                        }
+                        var buttonel = document.getElementById('selected');
+                        if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
+                            correctness = 0;
+                        } else {
+                            correctness = 1;
+                        }
+                        
+                        var info = getNextMemorizeItem(curItem, correctness, memorizeItems);
+                        if (info == undefined) {
+                            //jsPsych.data.displayData();
+                            postInstr();
+                        } else if (info == 0) {
+                            //return {};
+                        } else {
+                           var trial = info.trial;
+                            curItem = info.curItem;
+                            memorizeItems = info.memorizeItemArr;
+                            jsPsych.addNodeToEndOfTimeline({
+                                timeline: [trial]
+                            }, jsPsych.resumeExperiment) 
+                        }
+                        
+                    }
+                }
+            } else {
+                console.log('fuckin how');
+            }
+            jsPsych.addNodeToEndOfTimeline({
+                timeline: [nextTrial]
+            }, jsPsych.resumeExperiment)
+        }
+    }
+    jsPsych.addNodeToEndOfTimeline({
+        timeline: [instructions_trial]
+    }, jsPsych.resumeExperiment)
 }
