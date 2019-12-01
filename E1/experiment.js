@@ -141,10 +141,11 @@ class Experiment {
 		if (!this.condition) {
 			var conditions = [constants.CONDITION_FIXED, constants.CONDITION_METTLER, constants.CONDITION_MEMORIZE];
             this.condition = conditions[Math.floor(condRand * conditions.length)];
-            condition = this.condition;
         }
-        //this.condition = constants.CONDITION_FIXED;
+        this.condition = constants.CONDITION_FIXED;
         //this.condition = constants.CONDITION_POST;
+        condition = this.condition;
+
 
         console.log('Worker ID', this.workerId);
         console.log(this.condition);
@@ -215,7 +216,7 @@ class Experiment {
         regularItems = createPostItems(africaPaths);
         regularItems = fisherYatesShuffle(regularItems);
         console.log('created reg');
-        totalItemsShown++;
+        totalItemsShown = 0;
         switch (this.condition) {
             case constants.CONDITION_FIXED:
                 this.buildTimelineFixed();
@@ -243,6 +244,7 @@ class Experiment {
             on_finish: function() {
                 console.log(jsPsych.data.getLastTrialData());
                 jsPsych.pauseExperiment();
+                totalItemsShown++;
                 console.log(mettlerItems);
                 var buttonel = document.getElementById('selected');
                 if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
@@ -278,6 +280,7 @@ class Experiment {
             feedback: true,
             on_finish: function() {
                 jsPsych.pauseExperiment();
+                totalItemsShown++;
                 var buttonel = document.getElementById('selected');
                 if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
                     correctness = 0;
@@ -308,6 +311,7 @@ class Experiment {
             feedback: true,
             on_finish: function() {
                 jsPsych.pauseExperiment();
+                totalItemsShown++;
                 var buttonel = document.getElementById('selected');
                 if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
                     correctness = 0
@@ -339,17 +343,22 @@ class Experiment {
                 })
                 //jsPsych.data.displayData();
 
-                let myData = jsPsych.data.dataAsJSON() // Data for the experiment
-
+                //let myData = jsPsych.data.dataAsJSON() // Data for the experiment
+                const myData = jsPsych.data.getData();
+                console.log('posting in init finish');
+                $.ajax('https://jarvis.psych.purdue.edu/api/v1/experiments/data/5de3fc9d11c7ce47f46164fb', {
+                        data: JSON.stringify(myData),
+                        contentType: 'application/json',
+                        type: 'POST'
+                    })
 
 				$('#jspsych-content').css('text-align', 'center');
 				$('#jspsych-content').html(`
 				    <h2>Thank you for your participation!</h2><br><br>
-                    <h1>Survey code: ${constants.TOKEN}</h1><br><br>
 				    <a href="debriefing.html" target="_blank">Click here to read about the purpose of this experiment</a>
 				    
 				`)
-				jsPsych.data.localSave('Africa-Map-Task-E1-' + this.workerId + '.csv', 'csv')
+				//jsPsych.data.localSave('Africa-Map-Task-E1-' + this.workerId + '.csv', 'csv')
             }
         })
     }    

@@ -75,7 +75,7 @@ module.exports.loadResponseButtons = (self) => {
     const $buttonRow = $('<row>', { class: 'row pr-2' })
     self.$responseContainer.append($buttonRow)
 
-    for (const nation of Object.keys(africaPaths).sort()) {
+    for (const nation of Object.keys(africaButtons).sort()) {
         let buttonName = nation.split('_').join(' ')
         const $buttonCol = $('<col>', { class: 'col-4 p-1 m-0' })
         const $responseButton = $('<button>', {

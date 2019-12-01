@@ -43,7 +43,7 @@ function MettlerPriority(item) {
  * @returns {json: next trial, next item to present, and newly organized array}
  */
 function getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctness, mettlerItemArr) {
-    totalItemsShown++;
+    console.log(totalItemsShown);
     curItem.numSinceLastTrials = 1;
     curItem.responseTime = (thisTimeElapsed - prevTimeElapsed) / 1000.0;
     curItem.accuracy = correctness;
@@ -82,6 +82,7 @@ function getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctne
                 thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
                 if (totalItemsShown % 24 == 0) {
                     prevTimeElapsed = thisTimeElapsed;
+                    console.log('calling break');
                     breakInstr();
                     return 0;
                 }

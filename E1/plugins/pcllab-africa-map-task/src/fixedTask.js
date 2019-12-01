@@ -72,7 +72,7 @@ function getNextFixedItem(curItem, correctness, fixedItemArr) {
                 var info = getNextFixedItem(curItem, correctness, fixedItems);
                 if (info == undefined) {
                     //jsPsych.data.displayData();
-                    //console.log('undefined');
+                    console.log('undefined');
                     postInstr();
                 } else if (info == 0) {
                     console.log('was 0');

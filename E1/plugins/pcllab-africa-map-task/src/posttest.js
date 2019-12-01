@@ -56,9 +56,11 @@ function getNextPosttestItem(curItem, correctness, regularItemArr) {
                 }
                 var info = getNextPosttestItem(curItem, correctness, regularItems);
                 if (info == undefined) {
-                    console.log('post test done');
+                    console.log('post test done'); 
+                    finishPost();              
                     return;
                 }
+                
                 var trial = info.trial;
                 curItem = info.curItem;
                 regularItems = info.regularItemArr;
@@ -77,6 +79,42 @@ function getNextPosttestItem(curItem, correctness, regularItemArr) {
         regularItemArr: regularItemArr
     }
 
+}
+
+function finishPost() {
+    jsPsych.data.addProperties({
+        worker_id: this.workerId,
+        condition: this.condition,
+        timestamp: new Date().toUTCString()
+    })
+    //jsPsych.data.displayData();
+
+    //let myData = jsPsych.data.dataAsJSON() // Data for the experiment
+    const myData = jsPsych.data.getData();
+    console.log('posting data');
+    /*$.ajax('https://jarvis.psych.purdue.edu/api/v1/experiments/data/5de3fc9d11c7ce47f46164fb', {
+            data: JSON.stringify(myData),
+            contentType: 'application/json',
+            type: 'POST'
+        })
+        
+    postDebr();*/
+    return;
+}
+
+function postDebr() {
+    var debrief_trial = {
+        type: 'pcllab-core',
+        stimuli: [{"title": "Instructions",
+        "text": "<h2 style=\"text-align: center\">Thank you for your participation!</h2><br><br> <a href=\"debriefing.html\" target=\"_blank\">Click here to read about the purpose of this experiment</a>"        }],
+        response_count: 0,
+        data: {
+            period: 'instructions'
+        }
+    }
+    jsPsych.addNodeToEndOfTimeline({
+        timeline: [debrief_trial]
+    }, jsPsych.resumeExperiment)
 }
 
 function postInstr() {
@@ -134,7 +172,7 @@ function breakInstr() {
     var instructions_trial = {
         type: 'pcllab-core',
         stimuli: [{"title": "Instructions",
-        "text": "<p>You have just studied a group of 24 items. <br> <p style=\"text-align: center\">Click Continue when you are ready to continue the learning.</p>"
+        "text": "<p style=\"text-align: center\">You have just studied a group of 24 items. <br> <p style=\"text-align: center\">Click Continue when you are ready to continue the learning.</p>"
         }],
         response_count: 0,
         show_button: true,
@@ -260,7 +298,7 @@ function breakInstr() {
                     }
                 }
             } else {
-                console.log('fuckin how');
+                console.log('how');
             }
             jsPsych.addNodeToEndOfTimeline({
                 timeline: [nextTrial]
