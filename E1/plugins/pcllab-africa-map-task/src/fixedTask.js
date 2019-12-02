@@ -44,7 +44,7 @@ function getNextFixedItem(curItem, correctness, fixedItemArr) {
         fixedItemArr.splice(5, 0, curItem);
     }
 
-    console.log(fixedItemArr);
+    //console.log(fixedItemArr);
 
     curItem = fixedItemArr.shift();
 
@@ -53,26 +53,33 @@ function getNextFixedItem(curItem, correctness, fixedItemArr) {
             type: TASK,
             target: curItem.countryName,
             feedback: true,
-            on_finish: function() {
+            data: {
+                period: `block ${block}`,
+                question: curItem.countryName.toLowerCase(),
+            },
+            on_finish: function(data) {
                 jsPsych.pauseExperiment();
                 totalItemsShown++;
                 thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
-                if (totalItemsShown % 24 == 0) {
-                    prevTimeElapsed = thisTimeElapsed;
-                    console.log('calling break');
-                    breakInstr();
-                    return 0;
-                }
+                data.rt = thisTimeElapsed - prevTimeElapsed;
                 var buttonel = document.getElementById('selected');
                 if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
                     correctness = 0;
                 } else {
                     correctness = 1;
                 }
+                data.correctness = correctness;
+                data.response = buttonel.textContent.toLowerCase();
+                if (totalItemsShown % 24 == 0) {
+                    prevTimeElapsed = thisTimeElapsed;
+                    console.log('calling break');
+                    breakInstr();
+                    return 0;
+                }
                 var info = getNextFixedItem(curItem, correctness, fixedItems);
                 if (info == undefined) {
                     //jsPsych.data.displayData();
-                    console.log('undefined');
+                    //console.log('undefined');
                     postInstr();
                 } else if (info == 0) {
                     console.log('was 0');

@@ -200,7 +200,6 @@ function sampler(n_t, q, T) {
 }
 
 function getNextMemorizeItem(curItem, correctness, memorizeItemArr) {
-    totalItemsShown++;
     curItem.accuracy = correctness;
     curItem.forgettingRate = calcForgettingRate(curItem);
     curItem.p_recall = calcRecallProb(curItem);
@@ -223,12 +222,16 @@ function getNextMemorizeItem(curItem, correctness, memorizeItemArr) {
         memorizeItemArr.push(curItem);
     }
     
-    memorizeItemArr.sort((i1, i2) => i2.p_recall - i1.p_recall);
-    if (memorizeItemArr[0].countryName == prevName) {
-        var temp = memorizeItemArr[0];
-        memorizeItemArr[0] = memorizeItemArr[1];
-        memorizeItemArr[1] = temp;
+    if (memorizeItemArr.length > 0) {
+        memorizeItemArr.sort((i1, i2) => i1.p_recall - i2.p_recall);
+        if (memorizeItemArr[0].countryName == prevName) {
+            var temp = memorizeItemArr[0];
+            memorizeItemArr[0] = memorizeItemArr[1];
+            memorizeItemArr[1] = temp;
+        }
     }
+    
+    console.log(memorizeItemArr);
 
     curItem = memorizeItemArr.shift();
 
@@ -237,20 +240,29 @@ function getNextMemorizeItem(curItem, correctness, memorizeItemArr) {
             type: TASK,
             target: curItem.countryName,
             feedback: true,
-            on_finish: function() {
+            data: {
+                period: `block ${block}`,
+                question: curItem.countryName.toLowerCase()
+            },
+            on_finish: function(data) {
                 jsPsych.pauseExperiment();
+                console.log(totalItemsShown);
                 totalItemsShown++;
-                if (totalItemsShown % 24 == 0) {
-                    prevTimeElapsed = thisTimeElapsed;
-                    console.log('calling break');
-                    breakInstr();
-                    return 0;
-                }
+                thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
+                data.rt = thisTimeElapsed - prevTimeElapsed;
                 var buttonel = document.getElementById('selected');
                 if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
                     correctness = 0;
                 } else {
                     correctness = 1;
+                }
+                data.correctness = correctness;
+                data.response = buttonel.textContent.toLowerCase();
+                if (totalItemsShown % 24 == 0) {
+                    prevTimeElapsed = thisTimeElapsed;
+                    console.log('calling break');
+                    breakInstr();
+                    return 0;
                 }
                 var info = getNextMemorizeItem(curItem, correctness, memorizeItems);
                 if (info == undefined) {
@@ -263,6 +275,7 @@ function getNextMemorizeItem(curItem, correctness, memorizeItemArr) {
                     var trial = info.trial;
                     curItem = info.curItem;
                     memorizeItems = info.memorizeItemArr;
+                    prevTimeElapsed = thisTimeElapsed;
                     jsPsych.addNodeToEndOfTimeline({
                         timeline: [trial]
                     }, jsPsych.resumeExperiment) 
@@ -282,7 +295,7 @@ function getNextMemorizeItem(curItem, correctness, memorizeItemArr) {
 }
 
 function MemorizeItem(key) {
-    this.forgettingRate = 1;
+    this.forgettingRate = .1;
     this.countryName = key;
     this.p_recall = Math.pow(10, -10);
     this.sinceLastSeen = 0;

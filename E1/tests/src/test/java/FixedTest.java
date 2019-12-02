@@ -47,10 +47,12 @@ public class FixedTest {
         executor.executeScript("arguments[0].click();", startButton);
         Thread.sleep(3000);
         int i = 0;
+        int total = 0;
         boolean post = false;
         while (!post) {
             //while (!(driver.findElements(By.xpath("//button[text()='Continue']")).size() > 1)) {
             while (!(driver.findElements(By.xpath("//h1[contains(text(), 'Instructions')]")).size() > 0)) {
+                total++;
                 WebElement countryButton = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[text()='ethiopia']")));
                 Thread.sleep(1000);
                 executor.executeScript("arguments[0].click();", countryButton);
@@ -59,7 +61,7 @@ public class FixedTest {
                 Thread.sleep(1000);
                 executor.executeScript("arguments[0].click();", nextButton);
                 i++;
-                if (i > 21) {
+                if (i > 21 || total > 90) {
                     Thread.sleep(1500);
                 }
             }
@@ -79,8 +81,7 @@ public class FixedTest {
                 break;
             }
         }
-        while (!(driver.findElements(By.xpath("//h1[text()='Instructions']")).size() > 0)) {
-            System.out.println("found: " + driver.findElements(By.xpath("//h1[contains(text(), 'Instructions')]")).size());
+        while (!(driver.findElements(By.xpath("//h1[contains(text(), 'Debriefing')]")).size() > 0)) {
             WebElement countryButton = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[text()='ethiopia']")));
             Thread.sleep(1000);
             executor.executeScript("arguments[0].click();", countryButton);

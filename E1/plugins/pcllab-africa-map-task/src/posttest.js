@@ -46,7 +46,11 @@ function getNextPosttestItem(curItem, correctness, regularItemArr) {
             type: TASK,
             target: curItem.countryName,
             feedback: true,
-            on_finish: function() {
+            data: {
+                period: `posttest`,
+                question: curItem.countryName
+            },
+            on_finish: function(data) {
                 jsPsych.pauseExperiment();
                 var buttonel = document.getElementById('selected');
                 if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
@@ -54,6 +58,10 @@ function getNextPosttestItem(curItem, correctness, regularItemArr) {
                 } else {
                     correctness = 1;
                 }
+                thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
+                data.rt = thisTimeElapsed - prevTimeElapsed;
+                data.correctness = correctness;
+                data.response = buttonel.textContent.toLowerCase();
                 var info = getNextPosttestItem(curItem, correctness, regularItems);
                 if (info == undefined) {
                     console.log('post test done'); 
@@ -64,6 +72,7 @@ function getNextPosttestItem(curItem, correctness, regularItemArr) {
                 var trial = info.trial;
                 curItem = info.curItem;
                 regularItems = info.regularItemArr;
+                prevTimeElapsed = thisTimeElapsed;
                 jsPsych.addNodeToEndOfTimeline({
                     timeline: [trial]
                 }, jsPsych.resumeExperiment)
@@ -97,16 +106,17 @@ function finishPost() {
             contentType: 'application/json',
             type: 'POST'
         })
-        
-    postDebr();*/
-    return;
+        */
+    //postDebr();
+    jsPsych.resumeExperiment();
+    //return;
 }
 
 function postDebr() {
     var debrief_trial = {
         type: 'pcllab-core',
-        stimuli: [{"title": "Instructions",
-        "text": "<h2 style=\"text-align: center\">Thank you for your participation!</h2><br><br> <a href=\"debriefing.html\" target=\"_blank\">Click here to read about the purpose of this experiment</a>"        }],
+        stimuli: [{"title": "Debriefing",
+        "text": "<h2 style=\"text-align: center\">Thank you for your participation!</h2><br><br> <a href=\"debriefing.html\" style=\"text-align: center\" target=\"_blank\">Click here to read about the purpose of this experiment</a>"        }],
         response_count: 0,
         data: {
             period: 'instructions'
@@ -144,7 +154,11 @@ function givePosttest() {
         type: TASK,
         target: curItem.countryName,
         feedback: true,
-        on_finish: function() {
+        data: {
+            period: `posttest`,
+            question: curItem.countryName
+        },
+        on_finish: function(data) {
             jsPsych.pauseExperiment();
             var buttonel = document.getElementById('selected');
             if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
@@ -152,11 +166,15 @@ function givePosttest() {
             } else {
                 correctness = 1
             }
+            thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
+            data.rt = thisTimeElapsed - prevTimeElapsed;
+            data.correctness = correctness;
+            data.response = buttonel.textContent.toLowerCase();
             var info = getNextPosttestItem(curItem, correctness, regularItems);
             var trial = info.trial;
             curItem = info.curItem;
             regularItems = info.regularItemArr;
-
+            prevTimeElapsed = thisTimeElapsed;
             jsPsych.addNodeToEndOfTimeline({
                 timeline: [trial]
             }, jsPsych.resumeExperiment)
@@ -178,10 +196,12 @@ function breakInstr() {
         show_button: true,
         button_text: 'continue',
         data: {
-            period: 'instructions'
+            period: 'break'
         },
         on_finish: function() {
+            prevTimeElapsed = thisTimeElapsed;
             var nextTrial;
+            block++;
             console.log(condition);
             if (condition == constants.CONDITION_FIXED) {
                 console.log('in fixed');
@@ -189,16 +209,23 @@ function breakInstr() {
                     type: TASK,
                     target: curItem.countryName,
                     feedback: true,
-                    on_finish: function() {
+                    data: {
+                        period: `block ${block}`,
+                        question: curItem.countryName.toLowerCase(),
+                    },
+                    on_finish: function(data) {
                         jsPsych.pauseExperiment();
                         totalItemsShown++;
+                        thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
+                        data.rt = thisTimeElapsed - prevTimeElapsed;
                         var buttonel = document.getElementById('selected');
                         if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
                             correctness = 0;
                         } else {
                             correctness = 1;
                         }
-                        thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
+                        data.correctness = correctness;
+                        data.response = buttonel.textContent.toLowerCase();
                         if (totalItemsShown % 24 == 0) {
                             breakInstr();
                             return 0;
@@ -222,28 +249,35 @@ function breakInstr() {
                         
                     }
                 }
-            } else if (condition == "mettler") {
+            } else if (condition == constants.CONDITION_METTLER) {
                 nextTrial = {
                     type: TASK,
                     target: curItem.countryName,
                     feedback: true,
-                    on_finish: function() {
+                    data: {
+                        period: `block ${block}`,
+                        question: curItem.countryName.toLowerCase(),
+                    },
+                    on_finish: function(data) {
                         jsPsych.pauseExperiment();
                         //console.log(mettlerItemArr);
                         totalItemsShown++;
                         thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
-                        if (totalItemsShown % 24 == 0) {
-                            prevTimeElapsed = thisTimeElapsed;
-                            breakInstr();
-                            return 0;
-                        }
+                        data.rt = thisTimeElapsed - prevTimeElapsed;
                         var buttonel = document.getElementById('selected');
                         if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
                             correctness = 0;
                         } else {
                             correctness = 1;
                         }
-                        var info = getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctness, mettlerItems);
+                        data.correctness = correctness;
+                        data.response = buttonel.textContent.toLowerCase();
+                        if (totalItemsShown % 24 == 0) {
+                            prevTimeElapsed = thisTimeElapsed;
+                            breakInstr();
+                            return 0;
+                        }
+                        var info = getNextMettlerItem(curItem, correctness, mettlerItems);
                         if (info == undefined) {
                             //jsPsych.data.displayData();
                             postInstr();
@@ -261,25 +295,32 @@ function breakInstr() {
     
                     }
                 }
-            } else if (condition == "memorize") {
+            } else if (condition == constants.CONDITION_MEMORIZE) {
                 nextTrial = {
                     type: TASK,
                     target: curItem.countryName,
                     feedback: true,
-                    on_finish: function() {
+                    data: {
+                        period: `block ${block}`,
+                        question: curItem.countryName.toLowerCase(),
+                    },
+                    on_finish: function(data) {
                         jsPsych.pauseExperiment();
                         totalItemsShown++;
-                        if (totalItemsShown % 24 == 0) {
-                            breakInstr();
-                            return 0;
-                        }
+                        thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
+                        data.rt = thisTimeElapsed - prevTimeElapsed;
                         var buttonel = document.getElementById('selected');
                         if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
                             correctness = 0;
                         } else {
                             correctness = 1;
                         }
-                        
+                        data.correctness = correctness;
+                        data.response = buttonel.textContent.toLowerCase();
+                        if (totalItemsShown % 24 == 0) {
+                            breakInstr();
+                            return 0;
+                        }
                         var info = getNextMemorizeItem(curItem, correctness, memorizeItems);
                         if (info == undefined) {
                             //jsPsych.data.displayData();
@@ -290,6 +331,7 @@ function breakInstr() {
                            var trial = info.trial;
                             curItem = info.curItem;
                             memorizeItems = info.memorizeItemArr;
+                            prevTimeElapsed = thisTimeElapsed;
                             jsPsych.addNodeToEndOfTimeline({
                                 timeline: [trial]
                             }, jsPsych.resumeExperiment) 

@@ -42,7 +42,7 @@ function MettlerPriority(item) {
  * @param {Array: Array with all of the mettler items} mettlerItemArr 
  * @returns {json: next trial, next item to present, and newly organized array}
  */
-function getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctness, mettlerItemArr) {
+function getNextMettlerItem(curItem, correctness, mettlerItemArr) {
     console.log(totalItemsShown);
     curItem.numSinceLastTrials = 1;
     curItem.responseTime = (thisTimeElapsed - prevTimeElapsed) / 1000.0;
@@ -61,13 +61,18 @@ function getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctne
     if (curItem.timesShown < 4) {
         mettlerItemArr.push(curItem);
     }
-    mettlerItemArr.sort((i1, i2) => i2.priority - i1.priority);
-    if (mettlerItemArr[0].countryName == prevName) {
-        var temp = mettlerItemArr[0];
-        mettlerItemArr[0] = mettlerItemArr[1];
-        mettlerItemArr[1] = temp;
-    }
 
+    if (mettlerItemArr.length > 0) {
+        mettlerItemArr.sort((i1, i2) => i2.priority - i1.priority);
+        if (mettlerItemArr[0].countryName == prevName && mettlerItemArr.length != 1) {
+            var temp = mettlerItemArr[0];
+            mettlerItemArr[0] = mettlerItemArr[1];
+            mettlerItemArr[1] = temp;
+        }
+
+        //console.log(mettlerItemArr);
+
+    }
     curItem = mettlerItemArr.shift();
 
     if (curItem != undefined) {
@@ -75,26 +80,31 @@ function getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctne
             type: TASK,
             target: curItem.countryName,
             feedback: true,
-            on_finish: function() {
+            data: {
+                period: `block ${block}`,
+                question: curItem.countryName.toLowerCase()
+            },
+            on_finish: function(data) {
                 jsPsych.pauseExperiment();
                 //console.log(mettlerItemArr);
                 totalItemsShown++;
                 thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
-                if (totalItemsShown % 24 == 0) {
-                    prevTimeElapsed = thisTimeElapsed;
-                    console.log('calling break');
-                    breakInstr();
-                    return 0;
-                }
+                data.rt = thisTimeElapsed - prevTimeElapsed;
                 var buttonel = document.getElementById('selected');
                 if (buttonel.textContent.toLowerCase() == curItem.countryName.toLowerCase()) {
                     correctness = 0;
                 } else {
                     correctness = 1;
                 }
-
-                thisTimeElapsed = jsPsych.data.getLastTrialData().time_elapsed;
-                var info = getNextMettlerItem(curItem, thisTimeElapsed, prevTimeElapsed, correctness, mettlerItems);
+                data.correctness = correctness;
+                data.response = buttonel.textContent.toLowerCase();
+                if (totalItemsShown % 24 == 0) {
+                    prevTimeElapsed = thisTimeElapsed;
+                    console.log('calling break');
+                    breakInstr();
+                    return 0;
+                }
+                var info = getNextMettlerItem(curItem, correctness, mettlerItems);
                 if (info == undefined) {
                     //jsPsych.data.displayData();
                     postInstr();
