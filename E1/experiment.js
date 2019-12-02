@@ -145,7 +145,7 @@ class Experiment {
         }
         //this.condition = constants.CONDITION_FIXED;
         //this.condition = constants.CONDITION_METTLER;
-        this.condition = constants.CONDITION_MEMORIZE;
+        //this.condition = constants.CONDITION_MEMORIZE;
         condition = this.condition;
 
 

@@ -82,7 +82,7 @@ module.exports.loadResponseButtons = (self) => {
             class: 'response-button btn btn-flat-primary waves-effect waves-primary w-100 h-100 m-0 p-1',
             style: 'border: 1px solid #2196F3',
             text: buttonName,
-            id: `${buttonName}-label`
+            id: `${buttonName}-label`,
         })
         $buttonCol.append($responseButton)
         $buttonRow.append($buttonCol)
