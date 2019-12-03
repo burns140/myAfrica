@@ -57,24 +57,21 @@ class MapTask {
             //console.log(target);
 
             $('.response-button').attr('disabled', true)
-            $('.response-button').css('border', '1px solid #9E9E9E')
 
             $('.response-button').each(function () {
                 const $button = $(this)
                 if ($button.text().toLowerCase() === response) {
                     $button.css('pointer-events', 'none')
-                    $button.removeClass('btn-flat-primary')
-                    $button.addClass('btn-flat-danger')
-                    $button.css('border', '1px solid #f44336')
+                    $button.removeClass('btn-primary')
+                    $button.addClass('btn-danger')
                     $button.attr('disabled', false)
                     $button.attr('id', 'selected');
                 }
 
                 if ($button.text().toLowerCase() === target) {
                     $button.css('pointer-events', 'none')
-                    $button.removeClass('btn-flat-primary')
-                    $button.addClass('btn-flat-success')
-                    $button.css('border', '1px solid #4CAF50')
+                    $button.removeClass('btn-primary')
+                    $button.addClass('btn-success')
                     $button.attr('disabled', false)
                 }
             })
