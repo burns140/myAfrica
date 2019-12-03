@@ -79,8 +79,7 @@ module.exports.loadResponseButtons = (self) => {
         let buttonName = nation.split('_').join(' ')
         const $buttonCol = $('<col>', { class: 'col-4 p-1 m-0' })
         const $responseButton = $('<button>', {
-            class: 'response-button btn btn-flat-primary waves-effect waves-primary w-100 h-100 m-0 p-1',
-            style: 'border: 1px solid #2196F3',
+            class: 'response-button btn btn-primary waves-effect waves-light w-100 h-100 m-0 p-1',
             text: buttonName,
             id: `${buttonName}-label`,
         })

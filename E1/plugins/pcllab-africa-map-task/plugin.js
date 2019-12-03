@@ -333,24 +333,21 @@ class MapTask {
             //console.log(target);
 
             $('.response-button').attr('disabled', true)
-            $('.response-button').css('border', '1px solid #9E9E9E')
 
             $('.response-button').each(function () {
                 const $button = $(this)
                 if ($button.text().toLowerCase() === response) {
                     $button.css('pointer-events', 'none')
-                    $button.removeClass('btn-flat-primary')
-                    $button.addClass('btn-flat-danger')
-                    $button.css('border', '1px solid #f44336')
+                    $button.removeClass('btn-primary')
+                    $button.addClass('btn-danger')
                     $button.attr('disabled', false)
                     $button.attr('id', 'selected');
                 }
 
                 if ($button.text().toLowerCase() === target) {
                     $button.css('pointer-events', 'none')
-                    $button.removeClass('btn-flat-primary')
-                    $button.addClass('btn-flat-success')
-                    $button.css('border', '1px solid #4CAF50')
+                    $button.removeClass('btn-primary')
+                    $button.addClass('btn-success')
                     $button.attr('disabled', false)
                 }
             })
@@ -481,10 +478,9 @@ module.exports.loadResponseButtons = (self) => {
         let buttonName = nation.split('_').join(' ')
         const $buttonCol = $('<col>', { class: 'col-4 p-1 m-0' })
         const $responseButton = $('<button>', {
-            class: 'response-button btn btn-flat-primary waves-effect waves-primary w-100 h-100 m-0 p-1',
-            style: 'border: 1px solid #2196F3',
+            class: 'response-button btn btn-primary waves-effect waves-light w-100 h-100 m-0 p-1',
             text: buttonName,
-            id: `${buttonName}-label`
+            id: `${buttonName}-label`,
         })
         $buttonCol.append($responseButton)
         $buttonRow.append($buttonCol)
