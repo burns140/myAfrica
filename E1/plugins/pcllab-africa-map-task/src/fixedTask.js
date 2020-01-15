@@ -1,4 +1,6 @@
 
+const FIXED_SPACING = 7;
+
 /**
  * @constructor
  * @param {string: The country name} name
@@ -41,7 +43,7 @@ function getNextFixedItem(curItem, correctness, fixedItemArr) {
     curItem.timesShown++;
 
     if (curItem.timesShown < 4 || filler.hasOwnProperty(curItem.countryName.toLowerCase().replace(/ /g, '_'))) {
-        fixedItemArr.splice(5, 0, curItem);
+        fixedItemArr.splice(FIXED_SPACING, 0, curItem);
     }
 
     //console.log(fixedItemArr);
