@@ -41,16 +41,21 @@ function getNextFixedItem(curItem, correctness, fixedItemArr) {
     //console.log('get new item');
     curItem.accuracy = correctness;
     curItem.timesShown++;
+    //console.log(`${curItem.countryName}: ${curItem.timesShown}`);
 
     if (curItem.timesShown < 4 || filler.hasOwnProperty(curItem.countryName.toLowerCase().replace(/ /g, '_'))) {
         fixedItemArr.splice(FIXED_SPACING, 0, curItem);
     }
+    if (curItem.timesShown == 4) {
+        console.log(curItem.countryName);
+    }
 
     //console.log(fixedItemArr);
+    //console.log(fixedItemArr.length);
 
     curItem = fixedItemArr.shift();
 
-    if (curItem != undefined && fixedItemArr.length > 4) {
+    if (curItem != undefined && fixedItemArr.length > (FIXED_SPACING - 1)) {
         var nextTrial = {
             type: TASK,
             target: curItem.countryName,
@@ -75,31 +80,37 @@ function getNextFixedItem(curItem, correctness, fixedItemArr) {
                 if (totalItemsShown % 24 == 0) {
                     prevTimeElapsed = thisTimeElapsed;
                     console.log('calling break');
-                    breakInstr();
-                    return 0;
-                }
-                var info = getNextFixedItem(curItem, correctness, fixedItems);
-                if (info == undefined) {
-                    //jsPsych.data.displayData();
-                    //console.log('undefined');
-                    postInstr();
-                } else if (info == 0) {
-                    console.log('was 0');
-                    //return {};
-                } else {
-                    var trial = info.trial;
-                    curItem = info.nextItem;
-                    fixedItems = info.fixedItemArr;
-                    prevTimeElapsed = thisTimeElapsed;
+                    var breakNode = breakInstr(curItem);
                     jsPsych.addNodeToEndOfTimeline({
-                        timeline: [trial]
+                        timeline: [breakNode]
                     }, jsPsych.resumeExperiment)
+                } else {
+                    var info = getNextFixedItem(curItem, correctness, fixedItems);
+                    if (info == undefined) {
+                        postInstr();
+                    } else if (info == 0) {
+                        console.log('was 0');
+                        jsPsych.resumeExperiment();
+                        //return {};
+                    } else {
+                        var trial = info.trial;
+                        curItem = info.nextItem;
+                        fixedItems = info.fixedItemArr;
+                        prevTimeElapsed = thisTimeElapsed;
+                        jsPsych.addNodeToEndOfTimeline({
+                            timeline: [trial]
+                        }, jsPsych.resumeExperiment)
+                    }
                 }
-                console.log(this.timeline);
+                
                 
             }
         }
     } else {
+        console.log(curItem);
+        for (tempCountry of fixedItemArr) {
+            console.log(tempCountry);
+        }
         return undefined;
     }
 
@@ -109,4 +120,5 @@ function getNextFixedItem(curItem, correctness, fixedItemArr) {
         nextItem: curItem,
         fixedItemArr: fixedItemArr
     }
+    
 }

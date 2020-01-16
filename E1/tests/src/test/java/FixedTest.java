@@ -13,8 +13,8 @@ import java.beans.IntrospectionException;
 
 
 public class FixedTest {
-    //String url = "file:///C:/Users/steph/Desktop/adaptive_project/Africa-Map-Project/E1/experiment.html";
-    String url = "https://jarvis.psych.purdue.edu/weblab/Burns/africa-map-project/E1/lab-start.html";
+    String url = "file:///C:/Users/steph/Desktop/adaptive_project/Africa-Map-Project/E1/experiment.html";
+    //String url = "https://jarvis.psych.purdue.edu/weblab/Burns/africa-map-project/E1/lab-start.html";
     @Test
     public void fixedTest() throws InterruptedException {
         WebDriver driver = null;

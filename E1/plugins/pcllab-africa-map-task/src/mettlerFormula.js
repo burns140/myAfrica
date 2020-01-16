@@ -98,12 +98,12 @@ function getNextMettlerItem(curItem, correctness, mettlerItemArr) {
                 }
                 data.correctness = correctness;
                 data.response = buttonel.textContent.toLowerCase();
-                if (totalItemsShown % 24 == 0) {
+                /*if (totalItemsShown % 24 == 0) {
                     prevTimeElapsed = thisTimeElapsed;
                     console.log('calling break');
                     breakInstr();
                     return 0;
-                }
+                }*/
                 var info = getNextMettlerItem(curItem, correctness, mettlerItems);
                 if (info == undefined) {
                     //jsPsych.data.displayData();

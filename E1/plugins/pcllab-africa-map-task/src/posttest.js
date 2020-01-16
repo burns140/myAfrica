@@ -186,7 +186,7 @@ function givePosttest() {
     //this.timeline.push(firstTrial);
 }
 
-function breakInstr() {
+function breakInstr(curItem) {
     var instructions_trial = {
         type: 'pcllab-core',
         stimuli: [{"title": "Instructions",
@@ -199,6 +199,7 @@ function breakInstr() {
             period: 'break'
         },
         on_finish: function() {
+            jsPsych.pauseExperiment();
             prevTimeElapsed = thisTimeElapsed;
             var nextTrial;
             block++;
@@ -227,26 +228,31 @@ function breakInstr() {
                         data.correctness = correctness;
                         data.response = buttonel.textContent.toLowerCase();
                         if (totalItemsShown % 24 == 0) {
-                            breakInstr();
-                            return 0;
-                        }
-                        var info = getNextFixedItem(curItem, correctness, fixedItems);
-                        if (info == undefined) {
-                            //jsPsych.data.displayData();
-                            console.log('undefined');
-                            postInstr();
-                        } else if (info == 0) {
-                            //return {};
-                        } else {
-                            var trial = info.trial;
-                            curItem = info.nextItem;
-                            fixedItems = info.fixedItemArr;
                             prevTimeElapsed = thisTimeElapsed;
+                            console.log('calling break');
+                            var breakNode = breakInstr(curItem);
                             jsPsych.addNodeToEndOfTimeline({
-                                timeline: [trial]
+                                timeline: [breakNode]
                             }, jsPsych.resumeExperiment)
+                            //return 0;
+                        } else {
+                            var info = getNextFixedItem(curItem, correctness, fixedItems);
+                            if (info == undefined) {
+                                postInstr();
+                            } else if (info == 0) {
+                                console.log('was 0');
+                                jsPsych.resumeExperiment();
+                                //return {};
+                            } else {
+                                var trial = info.trial;
+                                curItem = info.nextItem;
+                                fixedItems = info.fixedItemArr;
+                                prevTimeElapsed = thisTimeElapsed;
+                                jsPsych.addNodeToEndOfTimeline({
+                                    timeline: [trial]
+                                }, jsPsych.resumeExperiment)
+                            }
                         }
-                        
                     }
                 }
             } else if (condition == constants.CONDITION_METTLER) {
@@ -274,25 +280,28 @@ function breakInstr() {
                         data.response = buttonel.textContent.toLowerCase();
                         if (totalItemsShown % 24 == 0) {
                             prevTimeElapsed = thisTimeElapsed;
-                            breakInstr();
-                            return 0;
-                        }
-                        var info = getNextMettlerItem(curItem, correctness, mettlerItems);
-                        if (info == undefined) {
-                            //jsPsych.data.displayData();
-                            postInstr();
-                        } else if (info == 0) {
-                            //return {};
-                        } else {
-                            var trial = info.trial;
-                            curItem = info.curItem;
-                            mettlerItems = info.mettlerItemArr;
-                            prevTimeElapsed = thisTimeElapsed;
+                            console.log('calling break');
+                            var breakNode = breakInstr(curItem);
                             jsPsych.addNodeToEndOfTimeline({
-                                timeline: [trial]
+                                timeline: [breakNode]
                             }, jsPsych.resumeExperiment)
+                        } else {
+                            var info = getNextMettlerItem(curItem, correctness, mettlerItems);
+                            if (info == undefined) {
+                                //jsPsych.data.displayData();
+                                postInstr();
+                            } else if (info == 0) {
+                                //return {};
+                            } else {
+                                var trial = info.trial;
+                                curItem = info.curItem;
+                                mettlerItems = info.mettlerItemArr;
+                                prevTimeElapsed = thisTimeElapsed;
+                                jsPsych.addNodeToEndOfTimeline({
+                                    timeline: [trial]
+                                }, jsPsych.resumeExperiment)
+                            }
                         }
-    
                     }
                 }
             } else if (condition == constants.CONDITION_MEMORIZE) {
@@ -318,8 +327,12 @@ function breakInstr() {
                         data.correctness = correctness;
                         data.response = buttonel.textContent.toLowerCase();
                         if (totalItemsShown % 24 == 0) {
-                            breakInstr();
-                            return 0;
+                            prevTimeElapsed = thisTimeElapsed;
+                            console.log('calling break');
+                            var breakNode = breakInstr(curItem);
+                            jsPsych.addNodeToEndOfTimeline({
+                                timeline: [breakNode]
+                            }, jsPsych.resumeExperiment)
                         }
                         var info = getNextMemorizeItem(curItem, correctness, memorizeItems);
                         if (info == undefined) {
@@ -347,7 +360,7 @@ function breakInstr() {
             }, jsPsych.resumeExperiment)
         }
     }
-    jsPsych.addNodeToEndOfTimeline({
-        timeline: [instructions_trial]
-    }, jsPsych.resumeExperiment)
+    return instructions_trial;
+
+    
 }

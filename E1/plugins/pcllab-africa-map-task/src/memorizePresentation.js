@@ -261,25 +261,29 @@ function getNextMemorizeItem(curItem, correctness, memorizeItemArr) {
                 if (totalItemsShown % 24 == 0) {
                     prevTimeElapsed = thisTimeElapsed;
                     console.log('calling break');
-                    breakInstr();
-                    return 0;
-                }
-                var info = getNextMemorizeItem(curItem, correctness, memorizeItems);
-                if (info == undefined) {
-                    //jsPsych.data.displayData();
-                    postInstr();
-                } else if (info == 0) {
-                    console.log('was 0');
-                    //return {};
-                } else {
-                    var trial = info.trial;
-                    curItem = info.curItem;
-                    memorizeItems = info.memorizeItemArr;
-                    prevTimeElapsed = thisTimeElapsed;
+                    var breakNode = breakInstr(curItem);
                     jsPsych.addNodeToEndOfTimeline({
-                        timeline: [trial]
-                    }, jsPsych.resumeExperiment) 
+                        timeline: [breakNode]
+                    }, jsPsych.resumeExperiment)
+                } else {
+                    var info = getNextMemorizeItem(curItem, correctness, memorizeItems);
+                    if (info == undefined) {
+                        //jsPsych.data.displayData();
+                        postInstr();
+                    } else if (info == 0) {
+                        console.log('was 0');
+                        //return {};
+                    } else {
+                        var trial = info.trial;
+                        curItem = info.curItem;
+                        memorizeItems = info.memorizeItemArr;
+                        prevTimeElapsed = thisTimeElapsed;
+                        jsPsych.addNodeToEndOfTimeline({
+                            timeline: [trial]
+                        }, jsPsych.resumeExperiment) 
+                    }
                 }
+                
                 
             }
         }
