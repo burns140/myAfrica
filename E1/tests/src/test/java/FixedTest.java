@@ -13,7 +13,7 @@ import java.beans.IntrospectionException;
 
 
 public class FixedTest {
-    String url = "file:///C:/Users/steph/Desktop/adaptive_project/Africa-Map-Project/E1/experiment.html";
+    String url = "file:///C:/Users/steph/Desktop/desktop/adaptive_project/Africa-Map-Project/E1/experiment.html?id=testid";
     //String url = "https://jarvis.psych.purdue.edu/weblab/Burns/africa-map-project/E1/lab-start.html";
     @Test
     public void fixedTest() throws InterruptedException {
@@ -53,7 +53,7 @@ public class FixedTest {
             //while (!(driver.findElements(By.xpath("//button[text()='Continue']")).size() > 1)) {
             while (!(driver.findElements(By.xpath("//h1[contains(text(), 'Instructions')]")).size() > 0)) {
                 total++;
-                WebElement countryButton = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[text()='ethiopia']")));
+                WebElement countryButton = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[text()='kenya']")));
                 Thread.sleep(1000);
                 executor.executeScript("arguments[0].click();", countryButton);
                 Thread.sleep(1000);
@@ -82,7 +82,7 @@ public class FixedTest {
             }
         }
         while (!(driver.findElements(By.xpath("//h1[contains(text(), 'Debriefing')]")).size() > 0)) {
-            WebElement countryButton = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[text()='ethiopia']")));
+            WebElement countryButton = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[text()='kenya']")));
             Thread.sleep(1000);
             executor.executeScript("arguments[0].click();", countryButton);
             Thread.sleep(1000);

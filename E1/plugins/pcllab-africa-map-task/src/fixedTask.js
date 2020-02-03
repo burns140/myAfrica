@@ -1,4 +1,3 @@
-
 const FIXED_SPACING = 7;
 
 /**
@@ -45,6 +44,9 @@ function getNextFixedItem(curItem, correctness, fixedItemArr) {
 
     if (curItem.timesShown < 4 || filler.hasOwnProperty(curItem.countryName.toLowerCase().replace(/ /g, '_'))) {
         fixedItemArr.splice(FIXED_SPACING, 0, curItem);
+        if (filler.hasOwnProperty(curItem.countryName.toLowerCase().replace(/ /g, '_'))) {
+            console.log("FILLER---------------------------------");
+        }
     }
     if (curItem.timesShown == 4) {
         console.log(curItem.countryName);

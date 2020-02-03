@@ -20,6 +20,7 @@ var results = [];
 var totalItemsShown = 0;
 var condition;
 var block = 0;
+var subNum;
 
 var fullAfricaPaths = {
 	// lake_victoria:"m 6686.8914,6114.1921 c 45.6711,41.7 -69.4995,53.614 -41.6999,103.257 35.7429,105.242 -224.384,144.956 -67.5138,200.556 -7.9426,45.671 -59.5709,51.628 -97.2992,21.842 -59.571,1.986 -204.5273,95.314 -198.5701,-53.614 55.5996,-101.27 -27.7999,-186.656 67.5138,-299.84 37.7283,-27.8 138.9991,29.785 184.6703,-53.614 49.6424,3.971 91.342,133.041 152.8989,81.413 z",
@@ -140,12 +141,14 @@ class Experiment {
         
 
         /* MTurk */
-        if (!this.workerId) {
+        /* comment now cuz running on SONA */
+        /*if (!this.workerId) {
             this.turkInfo = jsPsych.turk.turkInfo();
             this.workerId = this.turkInfo.outsideTurk ? String(Math.floor(Math.random() * (10000 - 1000) + 1000)) : this.turkInfo.workerId;
             Math.seedrandom(this.workerId);
-        }
-    
+        }*/
+        subNum = jsPsych.data.getURLVariable("id");
+
         
         /* Determine which condition to use */
         const condRand = Math.random();
@@ -296,7 +299,7 @@ class Experiment {
         var filleritems = createFixedItems(filler);
         fixedItems = fisherYatesShuffle(fixedItems);
         console.log(fixedItems);
-        console.log(filleritems);
+        //console.log(filleritems);
         fixedItems.push(...filleritems);
         curItem = fixedItems.shift();
         console.log(fixedItems);
@@ -379,9 +382,10 @@ class Experiment {
             timeline: this.timeline,
             on_finish:  () => {
                 jsPsych.data.addProperties({
-                    worker_id: this.workerId,
+                    //worker_id: this.workerId,
+                    subject: subNum,
                     condition: this.condition,
-                    timestamp: new Date().toUTCString()
+                    timestamp: new Date().toUTCString(),
                 })
                 //jsPsych.data.displayData();
 
